@@ -6,16 +6,16 @@
 #include "Components/SphereComponent.h"
 #include "GameFramework/Actor.h"
 #include "PhysicsEngine/RadialForceComponent.h"
-#include "RedBarrel.generated.h"
+#include "SRedBarrel.generated.h"
 
 UCLASS()
-class ACTIONROGUELIKE_API ARedBarrel : public AActor
+class ACTIONROGUELIKE_API ASRedBarrel : public AActor
 {
 	GENERATED_BODY()
 
 public:
 	// Sets default values for this actor's properties
-	ARedBarrel();
+	ASRedBarrel();
 
 protected:
 	// Called when the game starts or when spawned
