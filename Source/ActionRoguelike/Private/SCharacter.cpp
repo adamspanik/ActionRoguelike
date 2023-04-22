@@ -5,6 +5,8 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "DrawDebugHelpers.h"
+#include "GameFramework/CharacterMovementComponent.h"
+#include "Kismet/KismetMathLibrary.h"
 
 // Sets default values
 ASCharacter::ASCharacter()
@@ -13,10 +15,14 @@ ASCharacter::ASCharacter()
 	PrimaryActorTick.bCanEverTick = true;
 
 	SpringArmComp = CreateDefaultSubobject<USpringArmComponent>("SpringArmComp");
+	SpringArmComp->bUsePawnControlRotation = true;
 	SpringArmComp->SetupAttachment(RootComponent);
 
 	CameraComp = CreateDefaultSubobject<UCameraComponent>("CameraComp");
 	CameraComp->SetupAttachment(SpringArmComp);
+
+	bUseControllerRotationYaw = false;
+	GetCharacterMovement()->bOrientRotationToMovement = true;
 }
 
 // Called when the game starts or when spawned
@@ -58,17 +64,33 @@ void ASCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 
 	PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
 	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
+
+	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ASCharacter::Jump);
 }
 
 
 void ASCharacter::MoveForward(float Value)
 {
-	AddMovementInput(GetActorForwardVector(), Value);
+	//AddMovementInput(CameraComp->GetForwardVector(), Value);
+	FRotator ControlRotation = GetControlRotation();
+	ControlRotation.Pitch = 0;
+	ControlRotation.Roll = 0;
+	
+	AddMovementInput(ControlRotation.Vector(), Value);
 }
 
 
 void ASCharacter::MoveRight(float Value)
 {
-	AddMovementInput(GetActorRightVector(), Value);
+	FRotator ControlRotation = GetControlRotation();
+	ControlRotation.Pitch = 0;
+	ControlRotation.Roll = 0;
+
+	FVector ControlRotationRightVector = UKismetMathLibrary::GetRightVector(ControlRotation);
+	// AddMovementInput(GetActorRightVector(), Value);
+	// AddMovementInput(CameraComp->GetRightVector(), Value);
+	// AddMovementInput(ControlRotation.Vector().RightVector, Value);
+	AddMovementInput(ControlRotationRightVector, Value);
+
 }
 
