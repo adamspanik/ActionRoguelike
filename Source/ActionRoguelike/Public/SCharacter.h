@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "SCharacter.generated.h"
 
+class USInteractionComponent;
 class UCameraComponent;
 class USpringArmComponent;
 
@@ -27,8 +28,16 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 	UCameraComponent* CameraComp;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(VisibleAnywhere)
+	USInteractionComponent* InteractionComp;
+
+	UPROPERTY(EditAnywhere, Category="Attack")
 	TSubclassOf<AActor> ProjectileClass;
+
+	UPROPERTY(EditAnywhere, Category="Attack")
+	UAnimMontage* AttackAnimation;
+	
+	FTimerHandle TimerHandle_PrimaryAttack;
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -37,7 +46,11 @@ protected:
 
 	void MoveRight(float Value);
 
+	void PrimaryAttack_TimeElapsed();
+	
 	void PrimaryAttack();
+
+	void PrimaryInteract();
 
 public:	
 	// Called every frame
