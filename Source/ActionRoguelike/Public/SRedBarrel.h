@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Components/SphereComponent.h"
+
 #include "GameFramework/Actor.h"
 #include "PhysicsEngine/RadialForceComponent.h"
 #include "SRedBarrel.generated.h"
@@ -27,9 +27,9 @@ protected:
 	UPROPERTY(EditAnywhere)
 	UStaticMeshComponent* StaticMeshComponent;
 	
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	URadialForceComponent* RadialForceComponent;
-
+	
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

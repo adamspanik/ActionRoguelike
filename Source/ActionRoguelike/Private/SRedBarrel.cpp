@@ -17,7 +17,10 @@ ASRedBarrel::ASRedBarrel()
 	RootComponent = StaticMeshComponent;
 	
 	RadialForceComponent = CreateDefaultSubobject<URadialForceComponent>("RadialForceComponent");
-	RadialForceComponent->Radius = 600.0f;
+	RadialForceComponent->SetAutoActivate(true);
+	RadialForceComponent->Radius = 750.0f;
+	RadialForceComponent->bImpulseVelChange = true;
+	RadialForceComponent->AddCollisionChannelToAffect(ECC_WorldDynamic);
 	RadialForceComponent->SetupAttachment(RootComponent);
 }
 
@@ -30,6 +33,9 @@ void ASRedBarrel::BeginPlay()
 void ASRedBarrel::ApplyRadialForce(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
 	RadialForceComponent->FireImpulse();
+
+	FString DebugString = FString::Printf(TEXT("NAME: %s"), *GetNameSafe(OtherActor));
+	DrawDebugString(GetWorld(), Hit.ImpactPoint, DebugString);
 }
 
 // Called every frame
