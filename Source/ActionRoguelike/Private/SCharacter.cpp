@@ -76,6 +76,9 @@ void ASCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	PlayerInputComponent->BindAction("PrimaryAttack", IE_Pressed, this, &ASCharacter::PrimaryAttack);
 
 	PlayerInputComponent->BindAction("PrimaryInteract", IE_Pressed, this, &ASCharacter::PrimaryInteract);
+
+	PlayerInputComponent->BindAction("SpecialAttack", IE_Pressed, this, &ASCharacter::SpecialAttack);
+	PlayerInputComponent->BindAction("Dash", IE_Pressed, this, &ASCharacter::Dash);
 }
 
 
@@ -104,10 +107,36 @@ void ASCharacter::MoveRight(float Value)
 
 }
 
-void ASCharacter::PrimaryAttack_TimeElapsed()
+
+
+void ASCharacter::PrimaryAttack_TimeElapsed(TSubclassOf<AActor> ProjectileClass)
 {
 	FVector HandLocation = GetMesh()->GetSocketLocation("Muzzle_01");
-	FTransform SpawnTM = FTransform(GetControlRotation(), HandLocation);
+	FVector End = CameraComp->GetComponentLocation() + GetControlRotation().Vector() * 1000;
+	FCollisionQueryParams QueryParams;
+	QueryParams.bTraceComplex = false;
+	
+	FCollisionObjectQueryParams ObjectQueryParams;
+	ObjectQueryParams.AddObjectTypesToQuery(ECC_WorldStatic);
+	ObjectQueryParams.AddObjectTypesToQuery(ECC_PhysicsBody);
+	
+	//DrawDebugLine(GetWorld(), CameraComp->GetComponentLocation(), End, FColor::Red, true);
+	
+	FHitResult HitResult;
+	bool bHit = GetWorld()->LineTraceSingleByObjectType(HitResult, CameraComp->GetComponentLocation(), End, ObjectQueryParams, QueryParams);
+
+	FRotator ProjectileRot;
+	if (bHit)
+	{
+		ProjectileRot = UKismetMathLibrary::FindLookAtRotation(HandLocation, HitResult.ImpactPoint);
+	}
+	else
+	{
+		ProjectileRot = UKismetMathLibrary::FindLookAtRotation(HandLocation, HitResult.TraceEnd);
+	}
+	
+	//FTransform SpawnTM = FTransform(GetControlRotation(), HandLocation);
+	FTransform SpawnTM = FTransform(ProjectileRot, HandLocation);
 	FActorSpawnParameters SpawnParams;
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 	SpawnParams.Instigator = this;
@@ -119,7 +148,26 @@ void ASCharacter::PrimaryAttack()
 {
 	PlayAnimMontage(AttackAnimation);
 
-	GetWorldTimerManager().SetTimer(TimerHandle_PrimaryAttack, this, &ASCharacter::PrimaryAttack_TimeElapsed, 0.2f);
+	FTimerDelegate TimerDelegate = FTimerDelegate::CreateUObject( this, &ASCharacter::PrimaryAttack_TimeElapsed, MagicProjectileClass);
+	GetWorldTimerManager().SetTimer(TimerHandle_PrimaryAttack, TimerDelegate,  0.2f, false);
+	// GetWorldTimerManager().ClearTimer(TimerHandle_PrimaryAttack);
+}
+
+void ASCharacter::Dash()
+{
+	PlayAnimMontage(AttackAnimation);
+
+	FTimerDelegate TimerDelegate = FTimerDelegate::CreateUObject( this, &ASCharacter::PrimaryAttack_TimeElapsed, DashProjectileClass);
+	GetWorldTimerManager().SetTimer(TimerHandle_PrimaryAttack, TimerDelegate,  0.2f, false);
+	// GetWorldTimerManager().ClearTimer(TimerHandle_PrimaryAttack);
+}
+
+void ASCharacter::SpecialAttack()
+{
+	PlayAnimMontage(AttackAnimation);
+
+	FTimerDelegate TimerDelegate = FTimerDelegate::CreateUObject( this, &ASCharacter::PrimaryAttack_TimeElapsed, BlackHoleProjectileClass);
+	GetWorldTimerManager().SetTimer(TimerHandle_PrimaryAttack, TimerDelegate,  0.2f, false);
 	// GetWorldTimerManager().ClearTimer(TimerHandle_PrimaryAttack);
 }
 

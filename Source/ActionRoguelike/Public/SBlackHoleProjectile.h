@@ -4,19 +4,19 @@
 
 #include "CoreMinimal.h"
 #include "SProjectile.h"
-#include "SMagicProjectile.generated.h"
+#include "SBlackHoleProjectile.generated.h"
 
 class USphereComponent;
 class UProjectileMovementComponent;
 class UParticleSystemComponent;
 
 UCLASS()
-class ACTIONROGUELIKE_API ASMagicProjectile : public ASProjectile
+class ACTIONROGUELIKE_API ASBlackHoleProjectile : public ASProjectile
 {
 	GENERATED_BODY()
 	
 public:
-	ASMagicProjectile();
+	ASBlackHoleProjectile();
 
 protected:
 private:	

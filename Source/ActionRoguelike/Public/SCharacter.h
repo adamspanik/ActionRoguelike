@@ -35,7 +35,13 @@ protected:
 	USAttributeComponent* AttributeComp;
 
 	UPROPERTY(EditAnywhere, Category="Attack")
-	TSubclassOf<AActor> ProjectileClass;
+	TSubclassOf<AActor> MagicProjectileClass;
+
+	UPROPERTY(EditAnywhere, Category="Attack")
+	TSubclassOf<AActor> DashProjectileClass;
+
+	UPROPERTY(EditAnywhere, Category="Attack")
+	TSubclassOf<AActor> BlackHoleProjectileClass;
 
 	UPROPERTY(EditAnywhere, Category="Attack")
 	UAnimMontage* AttackAnimation;
@@ -48,10 +54,14 @@ protected:
 	void MoveForward(float Value);
 
 	void MoveRight(float Value);
-
-	void PrimaryAttack_TimeElapsed();
+	
+	void PrimaryAttack_TimeElapsed(TSubclassOf<AActor> ProjectileClass);
 	
 	void PrimaryAttack();
+
+	void Dash();
+
+	void SpecialAttack();
 
 	void PrimaryInteract();
 
