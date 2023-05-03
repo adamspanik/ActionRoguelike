@@ -35,8 +35,15 @@ ASCharacter::ASCharacter()
 void ASCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
+
+void ASCharacter::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+
+	AttributeComp->OnHealthChanged.AddDynamic(this, &ASCharacter::OnHealthChanged);
+}
+
 
 // Called every frame
 void ASCharacter::Tick(float DeltaTime)
@@ -179,3 +186,10 @@ void ASCharacter::PrimaryInteract()
 	}
 }
 
+void ASCharacter::OnHealthChanged(AActor* InstigatorActor, USAttributeComponent* OwningComp, float NewHealth, float Delta)
+{
+	if (NewHealth <= 0.0f && Delta < 0.0f)
+	{
+		DisableInput(Cast<APlayerController>(GetController()));
+	}
+}
