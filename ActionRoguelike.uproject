@@ -8,7 +8,9 @@
 			"Name": "ActionRoguelike",
 			"Type": "Runtime",
 			"LoadingPhase": "Default",
-			"AdditionalDependencies": []
+			"AdditionalDependencies": [
+				"AIModule"
+			]
 		}
 	]
 }
