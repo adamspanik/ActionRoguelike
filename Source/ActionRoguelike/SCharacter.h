@@ -28,6 +28,9 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 	UCameraComponent* CameraComp;
 
+	UPROPERTY(EditAnywhere, Category="Attack")
+	UParticleSystem* ParticleSystem;
+
 	UPROPERTY(VisibleAnywhere)
 	USInteractionComponent* InteractionComp;
 
@@ -70,7 +73,9 @@ protected:
 
 	virtual void PostInitializeComponents() override;
 
-public:	
+public:
+	USAttributeComponent* GetAttributeComponent() const { return AttributeComp; }
+	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 

@@ -8,6 +8,7 @@
 #include "SAttributeComponent.h"
 #include "SInteractionComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 
 // Sets default values
@@ -155,6 +156,9 @@ void ASCharacter::PrimaryAttack()
 {
 	PlayAnimMontage(AttackAnimation);
 
+	FVector HandLocation = GetMesh()->GetSocketLocation("Muzzle_01");
+	UGameplayStatics::SpawnEmitterAttached(ParticleSystem, GetMesh(), "Hand", HandLocation, FRotator::ZeroRotator, FVector(1), EAttachLocation::KeepWorldPosition);
+	
 	FTimerDelegate TimerDelegate = FTimerDelegate::CreateUObject( this, &ASCharacter::PrimaryAttack_TimeElapsed, MagicProjectileClass);
 	GetWorldTimerManager().SetTimer(TimerHandle_PrimaryAttack, TimerDelegate,  0.2f, false);
 	// GetWorldTimerManager().ClearTimer(TimerHandle_PrimaryAttack);
@@ -191,5 +195,10 @@ void ASCharacter::OnHealthChanged(AActor* InstigatorActor, USAttributeComponent*
 	if (NewHealth <= 0.0f && Delta < 0.0f)
 	{
 		DisableInput(Cast<APlayerController>(GetController()));
+	}
+
+	if (Delta < 0.0f)
+	{
+		GetMesh()->SetScalarParameterValueOnMaterials("HitFlashTime", GetWorld()->TimeSeconds);
 	}
 }
