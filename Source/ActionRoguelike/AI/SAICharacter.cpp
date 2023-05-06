@@ -4,12 +4,16 @@
 #include "SAICharacter.h"
 
 #include "AIController.h"
+#include "ActionRoguelike/SAttributeComponent.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Perception/PawnSensingComponent.h"
 
 ASAICharacter::ASAICharacter()
 {
 	PawnSensingComponent = CreateDefaultSubobject<UPawnSensingComponent>("PawnSensingComponent");
+	AttributeComponent = CreateDefaultSubobject<USAttributeComponent>("AttributeComponent");
+
+	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;	
 }
 
 void ASAICharacter::PostInitializeComponents()
