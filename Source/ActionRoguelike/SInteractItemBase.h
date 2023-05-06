@@ -20,9 +20,6 @@ public:
 	virtual void Interact_Implementation(APawn* InstigatorPawn) override;
 
 protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
 	UPROPERTY(EditAnywhere)
 	UStaticMeshComponent* StaticMeshComponent;
 
@@ -32,9 +29,5 @@ protected:
 	void SetPowerupState(bool State);
 
 	bool bIsInteractable = true;
-	
-public:
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
 };
 

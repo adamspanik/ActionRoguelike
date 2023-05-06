@@ -6,10 +6,6 @@
 #include "Kismet/GameplayStatics.h"
 #include "Particles/ParticleSystemComponent.h"
 
-ASDashProjectile::ASDashProjectile()
-{
-}
-
 void ASDashProjectile::BeginPlay()
 {
 	Super::BeginPlay();
@@ -38,4 +34,3 @@ void ASDashProjectile::Dash_TimeElapsed()
 
 	Destroy();
 }
-

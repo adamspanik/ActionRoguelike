@@ -1,6 +1,4 @@
 // Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "SGameModeBase.h"
 
 #include "EngineUtils.h"
@@ -8,10 +6,6 @@
 #include "AI/SAICharacter.h"
 #include "EnvironmentQuery/EnvQueryManager.h"
 #include "Kismet/GameplayStatics.h"
-
-ASGameModeBase::ASGameModeBase()
-{
-}
 
 void ASGameModeBase::StartPlay()
 {

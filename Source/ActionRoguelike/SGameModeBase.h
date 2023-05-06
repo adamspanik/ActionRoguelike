@@ -17,8 +17,6 @@ class ACTIONROGUELIKE_API ASGameModeBase : public AGameModeBase
 	GENERATED_BODY()
 
 public:
-	ASGameModeBase();
-	
 	virtual void StartPlay() override;
 
 protected:

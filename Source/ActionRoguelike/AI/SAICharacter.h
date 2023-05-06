@@ -29,4 +29,8 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, Category="Components")
 	USAttributeComponent* AttributeComponent;
+
+	UFUNCTION()
+	void OnHealthChanged(AActor* InstigatorActor, USAttributeComponent* OwningComp, float NewHealth, float Delta);
+
 };

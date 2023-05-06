@@ -14,11 +14,4 @@ UCLASS()
 class ACTIONROGUELIKE_API ASBlackHoleProjectile : public ASProjectile
 {
 	GENERATED_BODY()
-	
-public:
-	ASBlackHoleProjectile();
-
-protected:
-private:	
-
 };

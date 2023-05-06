@@ -32,19 +32,12 @@ ASCharacter::ASCharacter()
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 }
 
-// Called when the game starts or when spawned
-void ASCharacter::BeginPlay()
-{
-	Super::BeginPlay();
-}
-
 void ASCharacter::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
 
 	AttributeComp->OnHealthChanged.AddDynamic(this, &ASCharacter::OnHealthChanged);
 }
-
 
 // Called every frame
 void ASCharacter::Tick(float DeltaTime)
@@ -89,7 +82,6 @@ void ASCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	PlayerInputComponent->BindAction("Dash", IE_Pressed, this, &ASCharacter::Dash);
 }
 
-
 void ASCharacter::MoveForward(float Value)
 {
 	//AddMovementInput(CameraComp->GetForwardVector(), Value);
@@ -99,7 +91,6 @@ void ASCharacter::MoveForward(float Value)
 	
 	AddMovementInput(ControlRotation.Vector(), Value);
 }
-
 
 void ASCharacter::MoveRight(float Value)
 {
@@ -114,8 +105,6 @@ void ASCharacter::MoveRight(float Value)
 	AddMovementInput(ControlRotationRightVector, Value);
 
 }
-
-
 
 void ASCharacter::PrimaryAttack_TimeElapsed(TSubclassOf<AActor> ProjectileClass)
 {

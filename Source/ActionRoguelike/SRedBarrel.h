@@ -18,9 +18,6 @@ public:
 	ASRedBarrel();
 
 protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-	
 	UFUNCTION()
 	virtual void ApplyRadialForce(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 	
@@ -29,10 +26,4 @@ protected:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	URadialForceComponent* RadialForceComponent;
-	
-public:
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
-	
 };

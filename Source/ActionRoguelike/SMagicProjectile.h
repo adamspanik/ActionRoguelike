@@ -14,11 +14,4 @@ UCLASS()
 class ACTIONROGUELIKE_API ASMagicProjectile : public ASProjectile
 {
 	GENERATED_BODY()
-	
-public:
-	ASMagicProjectile();
-
-protected:
-private:	
-
 };

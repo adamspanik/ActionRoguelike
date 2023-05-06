@@ -19,9 +19,6 @@ public:
 	virtual void Interact_Implementation(APawn* InstigatorPawn) override;
 
 protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
 	UPROPERTY(EditAnywhere)
 	UStaticMeshComponent* BaseMesh;
 
@@ -31,7 +28,4 @@ protected:
 	UPROPERTY(EditAnywhere)
 	double TargetPitch = 110.0f;
 
-public:
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
 };

@@ -14,9 +14,6 @@ UCLASS()
 class ACTIONROGUELIKE_API ASDashProjectile : public ASProjectile
 {
 	GENERATED_BODY()
-	
-public:
-	ASDashProjectile();
 
 protected:
 	virtual void BeginPlay() override;

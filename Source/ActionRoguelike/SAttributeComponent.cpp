@@ -7,14 +7,15 @@ USAttributeComponent::USAttributeComponent()
 
 bool USAttributeComponent::ApplyHealthChange(float Delta)
 {
-	// Health += Delta;
-	float PreviousHealth = Health;
+	float OldHealth = Health;
 	Health = FMath::Clamp(Health + Delta, 0.0f, MaxHealth);
 
-	if (PreviousHealth == Health)
-		return false;
+	float ActualDelta = Health - OldHealth;
 
-	OnHealthChanged.Broadcast(nullptr, this, Health, Delta);
+	if (OldHealth == Health)
+		return false;
+	
+	OnHealthChanged.Broadcast(nullptr, this, Health, ActualDelta);
 	
 	return true;
 }
