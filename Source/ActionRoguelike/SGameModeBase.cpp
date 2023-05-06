@@ -5,7 +5,6 @@
 #include "SAttributeComponent.h"
 #include "AI/SAICharacter.h"
 #include "EnvironmentQuery/EnvQueryManager.h"
-#include "Kismet/GameplayStatics.h"
 
 void ASGameModeBase::StartPlay()
 {
@@ -17,11 +16,21 @@ void ASGameModeBase::StartPlay()
 void ASGameModeBase::SpawnBotTimeElapsed()
 {
 	int32 NumberOfAliveBots = 0;
-	for (TActorIterator<ASAICharacter> It(GetWorld()); It; ++It)
+	/*for (TActorIterator<ASAICharacter> It(GetWorld()); It; ++It)
 	{
 		ASAICharacter* Bot = *It;
 
-		USAttributeComponent* AttributeComponent = Cast<USAttributeComponent>(Bot->GetComponentByClass(USAttributeComponent::StaticClass()));
+		USAttributeComponent* AttributeComponent = USAttributeComponent::GetAttributes(Bot);
+		if (ensure(AttributeComponent) && AttributeComponent->IsAlive())
+		{
+			NumberOfAliveBots++;
+		}
+	}*/
+
+	// TActorRange simplifies the code compared to TActorIterator<T>
+	for (ASAICharacter* Bot : TActorRange<ASAICharacter>(GetWorld()))
+	{
+		USAttributeComponent* AttributeComponent = USAttributeComponent::GetAttributes(Bot);
 		if (ensure(AttributeComponent) && AttributeComponent->IsAlive())
 		{
 			NumberOfAliveBots++;

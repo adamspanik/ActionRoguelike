@@ -19,6 +19,8 @@ public:
 	ASAICharacter();
 
 protected:
+	void SetTargetActor(AActor* Targer);
+	
 	virtual void PostInitializeComponents() override;
 	
 	UPROPERTY(VisibleAnywhere, Category="Components")

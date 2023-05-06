@@ -40,6 +40,6 @@ void ASProjectile::OnActorOverlap(UPrimitiveComponent* OverlappedComponent, AAct
 	if (!AttributeComponent)
 		return;
 
-	AttributeComponent->ApplyHealthChange(-20.0f);
+	AttributeComponent->ApplyHealthChange(GetInstigator(),-20.0f);
 	Destroy();	
 }

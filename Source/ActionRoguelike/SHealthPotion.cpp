@@ -20,7 +20,7 @@ void ASHealthPotion::Interact_Implementation(APawn* InstigatorPawn)
 	if (AttributeComponent->GetHealth() == AttributeComponent->GetMaxHealth())
 		return;
 	
-	AttributeComponent->ApplyHealthChange(HealthValue);
+	AttributeComponent->ApplyHealthChange(this, HealthValue);
 	
 	Super::Interact_Implementation(InstigatorPawn);
 }

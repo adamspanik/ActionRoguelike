@@ -17,6 +17,16 @@ ASAICharacter::ASAICharacter()
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;	
 }
 
+void ASAICharacter::SetTargetActor(AActor* Targer)
+{
+	AAIController* AIController = Cast<AAIController>(GetController());
+	if (!Controller)
+		return;
+
+	UBlackboardComponent* BlackboardComponent = AIController->GetBlackboardComponent();
+	BlackboardComponent->SetValueAsObject("TargetActor", Targer);
+}
+
 void ASAICharacter::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
@@ -27,13 +37,7 @@ void ASAICharacter::PostInitializeComponents()
 
 void ASAICharacter::OnPawnSeen(APawn* Pawn)
 {
-	AAIController* AIController = Cast<AAIController>(GetController());
-	if (!Controller)
-		return;
-
-	UBlackboardComponent* BlackboardComponent = AIController->GetBlackboardComponent();
-	BlackboardComponent->SetValueAsObject("TargetActor", Pawn);
-
+	SetTargetActor(Pawn);
 	DrawDebugString(GetWorld(), GetActorLocation(), "PLAYER SPOTTED", nullptr, FColor::White, 4.0f, true);
 }
 
@@ -41,6 +45,13 @@ void ASAICharacter::OnHealthChanged(AActor* InstigatorActor, USAttributeComponen
 {
 	if (Delta < 0.0f)
 	{
+		GetMesh()->SetScalarParameterValueOnMaterials("HitFlashTime", GetWorld()->TimeSeconds);
+		
+		if (InstigatorActor != this)
+		{
+			SetTargetActor(InstigatorActor);
+		}
+		
 		if (NewHealth <= 0.0f)
 		{
 			AAIController* AIController = Cast<AAIController>(GetController());
