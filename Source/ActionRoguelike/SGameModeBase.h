@@ -19,6 +19,9 @@ class ACTIONROGUELIKE_API ASGameModeBase : public AGameModeBase
 public:
 	virtual void StartPlay() override;
 
+	UFUNCTION(Exec)
+	void KillAll();
+
 protected:
 	FTimerHandle TimerHandle_SpawnBots;
 

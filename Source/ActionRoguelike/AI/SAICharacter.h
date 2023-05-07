@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "SAICharacter.generated.h"
 
+class USWorldUserWidget;
 class USAttributeComponent;
 class UPawnSensingComponent;
 
@@ -22,6 +23,12 @@ protected:
 	void SetTargetActor(AActor* Targer);
 	
 	virtual void PostInitializeComponents() override;
+
+	UPROPERTY(VisibleAnywhere, Category="UI")
+	USWorldUserWidget* ActiveHealthBar;
+	
+	UPROPERTY(EditAnywhere, Category="UI")
+	TSubclassOf<UUserWidget> HealthBarWidgetClass;
 	
 	UPROPERTY(VisibleAnywhere, Category="Components")
 	UPawnSensingComponent* PawnSensingComponent;
