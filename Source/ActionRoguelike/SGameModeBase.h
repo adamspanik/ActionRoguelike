@@ -22,7 +22,13 @@ public:
 	UFUNCTION(Exec)
 	void KillAll();
 
+	UFUNCTION()
+	virtual void OnActorKilled(AActor* Victim, AActor* Killer);
+
 protected:
+	UFUNCTION()
+	void RespawnPlayerElapsed(AController* Controller);
+	
 	FTimerHandle TimerHandle_SpawnBots;
 
 	UPROPERTY(EditDefaultsOnly, Category="AI")

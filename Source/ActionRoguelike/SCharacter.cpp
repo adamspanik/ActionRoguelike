@@ -39,6 +39,11 @@ void ASCharacter::PostInitializeComponents()
 	AttributeComp->OnHealthChanged.AddDynamic(this, &ASCharacter::OnHealthChanged);
 }
 
+FVector ASCharacter::GetPawnViewLocation() const
+{
+	return CameraComp->GetComponentLocation();
+}
+
 // Called every frame
 void ASCharacter::Tick(float DeltaTime)
 {
@@ -195,4 +200,9 @@ void ASCharacter::OnHealthChanged(AActor* InstigatorActor, USAttributeComponent*
 void ASCharacter::HealSelf(float Amount)
 {
 	AttributeComp->ApplyHealthChange(this, Amount);
+}
+
+void ASCharacter::KillSelf()
+{
+	AttributeComp->ApplyHealthChange(this, -200.0f);
 }

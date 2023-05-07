@@ -70,6 +70,8 @@ protected:
 
 	virtual void PostInitializeComponents() override;
 
+	virtual FVector GetPawnViewLocation() const override;
+
 public:
 	USAttributeComponent* GetAttributeComponent() const { return AttributeComp; }
 	
@@ -81,4 +83,7 @@ public:
 
 	UFUNCTION(Exec)
 	void HealSelf(float Amount = 100.0f);
+
+	UFUNCTION(Exec)
+	void KillSelf();
 };

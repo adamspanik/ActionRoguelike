@@ -4,6 +4,7 @@
 #include "SProjectile.h"
 
 #include "SAttributeComponent.h"
+#include "SGameplayFunctionLibrary.h"
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Particles/ParticleSystemComponent.h"
@@ -35,11 +36,17 @@ void ASProjectile::OnActorOverlap(UPrimitiveComponent* OverlappedComponent, AAct
 	if (OtherActor == GetInstigator())
 		return;
 
-	USAttributeComponent* AttributeComponent = Cast<USAttributeComponent>(OtherActor->GetComponentByClass(USAttributeComponent::StaticClass()));
+	/*if(!USGameplayFunctionLibrary::ApplyDirectionalDamage(GetInstigator(), OtherActor, -DamageAmount, SweepResult))
+		return;*/
 
-	if (!AttributeComponent)
-		return;
+	USGameplayFunctionLibrary::ApplyDirectionalDamage(GetInstigator(), OtherActor, -DamageAmount, SweepResult);
 
-	AttributeComponent->ApplyHealthChange(GetInstigator(),-20.0f);
 	Destroy();	
+	// USAttributeComponent* AttributeComponent = Cast<USAttributeComponent>(OtherActor->GetComponentByClass(USAttributeComponent::StaticClass()));
+	//
+	// if (!AttributeComponent)
+	// 	return;
+	//
+	// AttributeComponent->ApplyHealthChange(GetInstigator(),-20.0f);
+	// Destroy();	
 }

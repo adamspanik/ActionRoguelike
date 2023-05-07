@@ -9,6 +9,8 @@
 #include "ActionRoguelike/SWorldUserWidget.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Blueprint/UserWidget.h"
+#include "Components/CapsuleComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "Perception/PawnSensingComponent.h"
 
 ASAICharacter::ASAICharacter()
@@ -16,7 +18,10 @@ ASAICharacter::ASAICharacter()
 	PawnSensingComponent = CreateDefaultSubobject<UPawnSensingComponent>("PawnSensingComponent");
 	AttributeComponent = CreateDefaultSubobject<USAttributeComponent>("AttributeComponent");
 
-	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;	
+	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
+
+	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_WorldDynamic, ECR_Ignore);
+	GetMesh()->SetGenerateOverlapEvents(true);	
 }
 
 void ASAICharacter::SetTargetActor(AActor* Targer)
@@ -63,7 +68,8 @@ void ASAICharacter::OnHealthChanged(AActor* InstigatorActor, USAttributeComponen
 				ActiveHealthBar->AddToViewport();
 			}
 		}
-		
+
+		// died
 		if (NewHealth <= 0.0f)
 		{
 			AAIController* AIController = Cast<AAIController>(GetController());
@@ -74,6 +80,9 @@ void ASAICharacter::OnHealthChanged(AActor* InstigatorActor, USAttributeComponen
 
 			GetMesh()->SetAllBodiesSimulatePhysics(true);
 			GetMesh()->SetCollisionProfileName("Ragdoll");
+
+			GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+			GetCharacterMovement()->DisableMovement();
 			
 			SetLifeSpan(10.0f);
 		}
