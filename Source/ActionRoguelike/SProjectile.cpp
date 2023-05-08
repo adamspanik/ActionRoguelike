@@ -7,6 +7,7 @@
 #include "SGameplayFunctionLibrary.h"
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
+#include "GAS/SActionComponent.h"
 #include "Particles/ParticleSystemComponent.h"
 
 
@@ -22,7 +23,7 @@ ASProjectile::ASProjectile()
 	EffectComp->SetupAttachment(SphereComp);
 
 	MovementComp = CreateDefaultSubobject<UProjectileMovementComponent>("MovementComp");
-	MovementComp->InitialSpeed = 1000.0f;
+	MovementComp->InitialSpeed = 3000.0f;
 	MovementComp->bRotationFollowsVelocity = true;
 	MovementComp->bInitialVelocityInLocalSpace = true;
 }
@@ -36,17 +37,15 @@ void ASProjectile::OnActorOverlap(UPrimitiveComponent* OverlappedComponent, AAct
 	if (OtherActor == GetInstigator())
 		return;
 
-	/*if(!USGameplayFunctionLibrary::ApplyDirectionalDamage(GetInstigator(), OtherActor, -DamageAmount, SweepResult))
-		return;*/
-
+	USActionComponent* ActionComponent = Cast<USActionComponent>(OtherActor->GetComponentByClass(USActionComponent::StaticClass()));
+	if (ActionComponent && ActionComponent->ActiveGameplayTags.HasTag(ParryTag))
+	{
+		MovementComp->Velocity = -MovementComp->Velocity;
+		SetInstigator(Cast<APawn>(OtherActor));
+		return;
+	}
+	
 	USGameplayFunctionLibrary::ApplyDirectionalDamage(GetInstigator(), OtherActor, -DamageAmount, SweepResult);
 
 	Destroy();	
-	// USAttributeComponent* AttributeComponent = Cast<USAttributeComponent>(OtherActor->GetComponentByClass(USAttributeComponent::StaticClass()));
-	//
-	// if (!AttributeComponent)
-	// 	return;
-	//
-	// AttributeComponent->ApplyHealthChange(GetInstigator(),-20.0f);
-	// Destroy();	
 }

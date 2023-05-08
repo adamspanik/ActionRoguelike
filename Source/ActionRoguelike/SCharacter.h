@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "SCharacter.generated.h"
 
+class USActionComponent;
 class USAttributeComponent;
 class USInteractionComponent;
 class UCameraComponent;
@@ -27,35 +28,19 @@ protected:
 
 	UPROPERTY(VisibleAnywhere)
 	UCameraComponent* CameraComp;
-
-	UPROPERTY(EditAnywhere, Category="Attack")
-	UParticleSystem* ParticleSystem;
-
+	
 	UPROPERTY(VisibleAnywhere)
 	USInteractionComponent* InteractionComp;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
 	USAttributeComponent* AttributeComp;
 
-	UPROPERTY(EditAnywhere, Category="Attack")
-	TSubclassOf<AActor> MagicProjectileClass;
-
-	UPROPERTY(EditAnywhere, Category="Attack")
-	TSubclassOf<AActor> DashProjectileClass;
-
-	UPROPERTY(EditAnywhere, Category="Attack")
-	TSubclassOf<AActor> BlackHoleProjectileClass;
-
-	UPROPERTY(EditAnywhere, Category="Attack")
-	UAnimMontage* AttackAnimation;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
+	USActionComponent* ActionComponent;
 	
-	FTimerHandle TimerHandle_PrimaryAttack;
-
 	void MoveForward(float Value);
 
 	void MoveRight(float Value);
-	
-	void PrimaryAttack_TimeElapsed(TSubclassOf<AActor> ProjectileClass);
 	
 	void PrimaryAttack();
 
@@ -64,6 +49,10 @@ protected:
 	void SpecialAttack();
 
 	void PrimaryInteract();
+
+	void SprintStart();
+
+	void SprintStop();
 
 	UFUNCTION()
 	void OnHealthChanged(AActor* InstigatorActor, USAttributeComponent* OwningComp, float NewHealth, float Delta);

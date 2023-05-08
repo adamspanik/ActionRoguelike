@@ -8,6 +8,7 @@
 #include "SAttributeComponent.h"
 #include "SInteractionComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "GAS/SActionComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 
@@ -27,6 +28,8 @@ ASCharacter::ASCharacter()
 	InteractionComp = CreateDefaultSubobject<USInteractionComponent>("InteractionComp");
 
 	AttributeComp = CreateDefaultSubobject<USAttributeComponent>("AttributeComp");
+
+	ActionComponent = CreateDefaultSubobject<USActionComponent>("ActionComponent");
 
 	bUseControllerRotationYaw = false;
 	GetCharacterMovement()->bOrientRotationToMovement = true;
@@ -85,6 +88,9 @@ void ASCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 
 	PlayerInputComponent->BindAction("SpecialAttack", IE_Pressed, this, &ASCharacter::SpecialAttack);
 	PlayerInputComponent->BindAction("Dash", IE_Pressed, this, &ASCharacter::Dash);
+
+	PlayerInputComponent->BindAction("Sprint", IE_Pressed, this, &ASCharacter::SprintStart);
+	PlayerInputComponent->BindAction("Sprint", IE_Released, this, &ASCharacter::SprintStop);
 }
 
 void ASCharacter::MoveForward(float Value)
@@ -111,69 +117,19 @@ void ASCharacter::MoveRight(float Value)
 
 }
 
-void ASCharacter::PrimaryAttack_TimeElapsed(TSubclassOf<AActor> ProjectileClass)
-{
-	FVector HandLocation = GetMesh()->GetSocketLocation("Muzzle_01");
-	FVector End = CameraComp->GetComponentLocation() + GetControlRotation().Vector() * 1000;
-	FCollisionQueryParams QueryParams;
-	QueryParams.bTraceComplex = false;
-	
-	FCollisionObjectQueryParams ObjectQueryParams;
-	ObjectQueryParams.AddObjectTypesToQuery(ECC_WorldStatic);
-	ObjectQueryParams.AddObjectTypesToQuery(ECC_PhysicsBody);
-	
-	//DrawDebugLine(GetWorld(), CameraComp->GetComponentLocation(), End, FColor::Red, true);
-	
-	FHitResult HitResult;
-	bool bHit = GetWorld()->LineTraceSingleByObjectType(HitResult, CameraComp->GetComponentLocation(), End, ObjectQueryParams, QueryParams);
-
-	FRotator ProjectileRot;
-	if (bHit)
-	{
-		ProjectileRot = UKismetMathLibrary::FindLookAtRotation(HandLocation, HitResult.ImpactPoint);
-	}
-	else
-	{
-		ProjectileRot = UKismetMathLibrary::FindLookAtRotation(HandLocation, HitResult.TraceEnd);
-	}
-	
-	//FTransform SpawnTM = FTransform(GetControlRotation(), HandLocation);
-	FTransform SpawnTM = FTransform(ProjectileRot, HandLocation);
-	FActorSpawnParameters SpawnParams;
-	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-	SpawnParams.Instigator = this;
-	
-	GetWorld()->SpawnActor<AActor>(ProjectileClass, SpawnTM, SpawnParams);
-}
-
 void ASCharacter::PrimaryAttack()
 {
-	PlayAnimMontage(AttackAnimation);
-
-	FVector HandLocation = GetMesh()->GetSocketLocation("Muzzle_01");
-	UGameplayStatics::SpawnEmitterAttached(ParticleSystem, GetMesh(), "Hand", HandLocation, FRotator::ZeroRotator, FVector(1), EAttachLocation::KeepWorldPosition);
-	
-	FTimerDelegate TimerDelegate = FTimerDelegate::CreateUObject( this, &ASCharacter::PrimaryAttack_TimeElapsed, MagicProjectileClass);
-	GetWorldTimerManager().SetTimer(TimerHandle_PrimaryAttack, TimerDelegate,  0.2f, false);
-	// GetWorldTimerManager().ClearTimer(TimerHandle_PrimaryAttack);
+	ActionComponent->StartActionByName(this, "PrimaryAttack");
 }
 
 void ASCharacter::Dash()
 {
-	PlayAnimMontage(AttackAnimation);
-
-	FTimerDelegate TimerDelegate = FTimerDelegate::CreateUObject( this, &ASCharacter::PrimaryAttack_TimeElapsed, DashProjectileClass);
-	GetWorldTimerManager().SetTimer(TimerHandle_PrimaryAttack, TimerDelegate,  0.2f, false);
-	// GetWorldTimerManager().ClearTimer(TimerHandle_PrimaryAttack);
+	ActionComponent->StartActionByName(this, "Dash");
 }
 
 void ASCharacter::SpecialAttack()
 {
-	PlayAnimMontage(AttackAnimation);
-
-	FTimerDelegate TimerDelegate = FTimerDelegate::CreateUObject( this, &ASCharacter::PrimaryAttack_TimeElapsed, BlackHoleProjectileClass);
-	GetWorldTimerManager().SetTimer(TimerHandle_PrimaryAttack, TimerDelegate,  0.2f, false);
-	// GetWorldTimerManager().ClearTimer(TimerHandle_PrimaryAttack);
+	ActionComponent->StartActionByName(this, "SpecialAttack");
 }
 
 void ASCharacter::PrimaryInteract()
@@ -182,6 +138,16 @@ void ASCharacter::PrimaryInteract()
 	{
 		InteractionComp->PrimaryInteract();
 	}
+}
+
+void ASCharacter::SprintStart()
+{
+	ActionComponent->StartActionByName(this, "Sprint");
+}
+
+void ASCharacter::SprintStop()
+{
+	ActionComponent->StopActionByName(this, "Sprint");
 }
 
 void ASCharacter::OnHealthChanged(AActor* InstigatorActor, USAttributeComponent* OwningComp, float NewHealth, float Delta)
