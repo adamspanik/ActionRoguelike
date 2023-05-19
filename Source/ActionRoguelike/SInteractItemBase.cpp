@@ -6,20 +6,28 @@
 
 ASInteractItemBase::ASInteractItemBase()
 {
+	SphereComponent = CreateDefaultSubobject<USphereComponent>("SphereComponent");
+	SphereComponent->SetCollisionProfileName("PowerUp");
+	RootComponent = SphereComponent;
+	
 	StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>("StaticMeshComponent");
-	RootComponent = StaticMeshComponent;
+	StaticMeshComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	StaticMeshComponent->SetupAttachment(SphereComponent);
 }
 
 void ASInteractItemBase::Interact_Implementation(APawn* InstigatorPawn)
 {
 	if (!bIsInteractable)
 		return;
-	
+
+	ISGameplayInterface::Interact_Implementation(InstigatorPawn);
+}
+
+void ASInteractItemBase::HideAndCooldownPowerUp()
+{
 	SetPowerupState(false);
 	
 	GetWorldTimerManager().SetTimer(TimerHandle_Use, this, &ASInteractItemBase::Use_TimeElapsed, 10.0f);
-
-	ISGameplayInterface::Interact_Implementation(InstigatorPawn);
 }
 
 void ASInteractItemBase::Use_TimeElapsed()

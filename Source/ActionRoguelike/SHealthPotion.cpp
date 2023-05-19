@@ -5,6 +5,7 @@
 
 #include "SAttributeComponent.h"
 #include "SCharacter.h"
+#include "SPlayerState.h"
 
 
 void ASHealthPotion::Interact_Implementation(APawn* InstigatorPawn)
@@ -19,8 +20,14 @@ void ASHealthPotion::Interact_Implementation(APawn* InstigatorPawn)
 
 	if (AttributeComponent->GetHealth() == AttributeComponent->GetMaxHealth())
 		return;
+
+	ASPlayerState* PlayerState = InstigatorPawn->GetPlayerState<ASPlayerState>();
+	if (!PlayerState)
+		return;
+
+	if (PlayerState->RemoveCredits(CreditCost) && AttributeComponent->ApplyHealthChange(this, HealthValue))
+		HideAndCooldownPowerUp();
 	
-	AttributeComponent->ApplyHealthChange(this, HealthValue);
 	
 	Super::Interact_Implementation(InstigatorPawn);
 }

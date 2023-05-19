@@ -18,4 +18,7 @@ private:
 protected:
 	UPROPERTY(EditAnywhere)
 	float HealthValue = 200.0f;
+
+	UPROPERTY(EditAnywhere)
+	int32 CreditCost = 15;
 };

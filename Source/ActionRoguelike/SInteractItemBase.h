@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "SGameplayInterface.h"
+#include "Components/SphereComponent.h"
 #include "GameFramework/Actor.h"
 #include "SInteractItemBase.generated.h"
 
@@ -20,6 +21,11 @@ public:
 	virtual void Interact_Implementation(APawn* InstigatorPawn) override;
 
 protected:
+	void HideAndCooldownPowerUp();
+
+	UPROPERTY(EditAnywhere)
+	USphereComponent* SphereComponent;
+	
 	UPROPERTY(EditAnywhere)
 	UStaticMeshComponent* StaticMeshComponent;
 
