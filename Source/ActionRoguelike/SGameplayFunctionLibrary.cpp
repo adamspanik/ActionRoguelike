@@ -11,7 +11,7 @@ bool USGameplayFunctionLibrary::ApplyDamage(AActor* DamageCauser, AActor* Target
 	if (!AttributeComponent)
 		return false;
 
-	return AttributeComponent->ApplyHealthChange(DamageCauser, DamageAmount);
+	return AttributeComponent->ApplyHealthChange(DamageCauser, -DamageAmount);
 }
 
 bool USGameplayFunctionLibrary::ApplyDirectionalDamage(AActor* DamageCauser, AActor* TargetActor, float DamageAmount, const FHitResult& OutHitResult)
@@ -21,7 +21,7 @@ bool USGameplayFunctionLibrary::ApplyDirectionalDamage(AActor* DamageCauser, AAc
 
 	UPrimitiveComponent* HitComp = OutHitResult.GetComponent();
 	if (!HitComp || !HitComp->IsSimulatingPhysics(OutHitResult.BoneName))
-		return false;
+		return true;
 
 	FVector Direction = OutHitResult.TraceEnd - OutHitResult.TraceStart;
 	Direction.Normalize();

@@ -2,6 +2,9 @@
 
 
 #include "SAction.h"
+
+#include "SActionComponent.h"
+
 bool USAction::CanStartAction_Implementation(AActor* Instigator)
 {
 	if (IsRunning())

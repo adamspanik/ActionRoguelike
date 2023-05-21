@@ -4,19 +4,21 @@
 
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
-#include "SActionComponent.h"
 #include "UObject/Object.h"
 #include "SAction.generated.h"
 
-/**
- * 
- */
+class USActionComponent;
+
 UCLASS(Blueprintable)
 class ACTIONROGUELIKE_API USAction : public UObject
 {
 	GENERATED_BODY()
 
 public:
+	/* Start immediately when added to an action component */
+	UPROPERTY(EditDefaultsOnly, Category="Action")
+	bool bAutoStart;
+	
 	UFUNCTION(BlueprintNativeEvent, Category="Action")
 	bool CanStartAction(AActor* Instigator);
 
