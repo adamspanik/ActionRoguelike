@@ -13,6 +13,8 @@ ASInteractItemBase::ASInteractItemBase()
 	StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>("StaticMeshComponent");
 	StaticMeshComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	StaticMeshComponent->SetupAttachment(SphereComponent);
+
+	SetReplicates(true);
 }
 
 void ASInteractItemBase::Interact_Implementation(APawn* InstigatorPawn)

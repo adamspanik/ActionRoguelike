@@ -25,11 +25,14 @@ public:
 	static bool IsActorAlive(AActor* Actor);
 
 protected:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Attributes")
+	UPROPERTY(Replicated, EditDefaultsOnly, BlueprintReadOnly, Category="Attributes")
 	float Health;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Attributes")
+	UPROPERTY(Replicated, EditDefaultsOnly, BlueprintReadOnly, Category="Attributes")
 	float MaxHealth = 200.0f;
+
+	UFUNCTION(NetMulticast, Reliable)
+	void MulticastHealthChanged(AActor* Instigator, float NewHealth, float Delta);
 
 public:
 	UPROPERTY(BlueprintAssignable)
