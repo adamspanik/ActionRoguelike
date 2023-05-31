@@ -22,14 +22,25 @@ public:
 
 protected:
 	void SetTargetActor(AActor* Targer);
+
+	UFUNCTION(BlueprintCallable, Category = "AI")
+	AActor* GetTargetActor() const;
 	
 	virtual void PostInitializeComponents() override;
 
+	/* Key for AI Blackboard 'TargetActor' */
+	UPROPERTY(VisibleAnywhere, Category = "Effects")
+	FName TargetActorKey = "TargetActor";
+	
 	UPROPERTY(VisibleAnywhere, Category="UI")
 	USWorldUserWidget* ActiveHealthBar;
 	
 	UPROPERTY(EditAnywhere, Category="UI")
 	TSubclassOf<UUserWidget> HealthBarWidgetClass;
+
+	/* Widget to display when bot first sees a player. */
+	UPROPERTY(EditDefaultsOnly, Category = "UI")
+	TSubclassOf<UUserWidget> SpottedWidgetClass;
 	
 	UPROPERTY(VisibleAnywhere, Category="Components")
 	UPawnSensingComponent* PawnSensingComponent;

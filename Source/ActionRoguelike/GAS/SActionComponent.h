@@ -20,9 +20,12 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Tags")
 	FGameplayTagContainer ActiveGameplayTags;
+
+	UFUNCTION(BlueprintCallable, Category="Actions")
+	bool GotAction(AActor* Instigator, TSubclassOf<USAction> ActionClass);
 	
 	UFUNCTION(BlueprintCallable, Category="Actions")
-	void AddAction(AActor* Instigator, TSubclassOf<USAction> ActionClass);
+	bool AddAction(AActor* Instigator, TSubclassOf<USAction> ActionClass);
 
 	UFUNCTION(BlueprintCallable, Category="Actions")
 	bool StartActionByName(AActor* Instigator, FName ActionName);

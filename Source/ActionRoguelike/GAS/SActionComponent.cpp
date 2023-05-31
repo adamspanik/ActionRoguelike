@@ -30,10 +30,31 @@ void USActionComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAct
 	GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::White, DebugMessage);
 }
 
-void USActionComponent::AddAction(AActor* Instigator, TSubclassOf<USAction> ActionClass)
+bool USActionComponent::GotAction(AActor* Instigator, TSubclassOf<USAction> ActionClass)
 {
 	if (!ensure(ActionClass))
-		return;
+		return false;
+
+	for (USAction* Action : Actions)
+	{
+		if (Action->IsA(ActionClass))
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, "GOT ABILITY ALREADY!");
+			return true;
+		}
+	}
+
+	return false;
+	//return Actions.Contains(ActionClass.GetDefaultObject()) ? true : false;
+}
+
+bool USActionComponent::AddAction(AActor* Instigator, TSubclassOf<USAction> ActionClass)
+{
+	if (!ensure(ActionClass))
+		return false;
+
+	if (GotAction(Instigator, ActionClass))
+		return false;
 
 	USAction* NewAction = NewObject<USAction>(this, ActionClass);
 	if (ensure(NewAction))
@@ -45,6 +66,8 @@ void USActionComponent::AddAction(AActor* Instigator, TSubclassOf<USAction> Acti
 			NewAction->StartAction(Instigator);
 		}
 	}
+
+	return true;
 }
 
 bool USActionComponent::StartActionByName(AActor* Instigator, FName ActionName)

@@ -4,6 +4,8 @@
 #include "SAction.h"
 
 #include "SActionComponent.h"
+#include "ActionRoguelike/SAttributeComponent.h"
+#include "ActionRoguelike/SCharacter.h"
 
 bool USAction::CanStartAction_Implementation(AActor* Instigator)
 {
@@ -13,6 +15,10 @@ bool USAction::CanStartAction_Implementation(AActor* Instigator)
 	USActionComponent* ActionComponent = GetOwningComponent();
 	if (ActionComponent->ActiveGameplayTags.HasAny(BlockedTags))
 		return false;
+
+	/*const ASCharacter* CharacterInstigator = Cast<ASCharacter>(Instigator);
+	if (CharacterInstigator && CharacterInstigator->GetAttributeComponent()->GetRage() < RageCost)
+		return false;*/
 
 	return true;
 }
@@ -24,6 +30,12 @@ void USAction::StartAction_Implementation(AActor* Instigator)
 	USActionComponent* ActionComponent = GetOwningComponent();
 	ActionComponent->ActiveGameplayTags.AppendTags(GrantsTags);
 
+	/*const ASCharacter* CharacterInstigator = Cast<ASCharacter>(Instigator);
+	if (CharacterInstigator)
+	{
+		CharacterInstigator->GetAttributeComponent()->ApplyRageChange(Instigator, -RageCost);
+	}*/
+	
 	bIsRunning = true;
 }
 

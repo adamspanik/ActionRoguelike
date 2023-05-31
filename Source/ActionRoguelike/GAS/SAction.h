@@ -36,6 +36,16 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Action")
 	bool IsRunning() const { return bIsRunning; }
 
+	/*bool operator== (const USAction& Other) const
+	{
+		return ActionName == Other.ActionName;
+	}
+    
+	friend uint32 GetTypeHash (const USAction& Other)
+	{
+		return GetTypeHash(Other.ActionName);
+	}*/
+
 protected:
 	UFUNCTION(BlueprintCallable, Category="Action")
 	USActionComponent* GetOwningComponent() const;
@@ -46,5 +56,8 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category="Tags")
 	FGameplayTagContainer BlockedTags;
 
-	bool bIsRunning;	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Cost")
+	float RageCost = 0.0f;
+
+	bool bIsRunning;
 };

@@ -63,6 +63,8 @@ protected:
 
 public:
 	USAttributeComponent* GetAttributeComponent() const { return AttributeComp; }
+
+	USActionComponent* GetActionComponent() const { return ActionComponent; }
 	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

@@ -21,6 +21,12 @@ bool USAttributeComponent::ApplyHealthChange(AActor* InstigatorActor, float Delt
 	{
 		Delta *= CVarDamageMultiplier.GetValueOnGameThread();
 	}
+
+	if (Delta < 0.0f)
+	{
+		const int RageAmount = -Delta;
+		ApplyRageChange(InstigatorActor, RageAmount);
+	}
 	
 	float OldHealth = Health;
 	Health = FMath::Clamp(Health + Delta, 0.0f, MaxHealth);
@@ -42,6 +48,23 @@ bool USAttributeComponent::ApplyHealthChange(AActor* InstigatorActor, float Delt
 		{
 			GameMode->OnActorKilled(GetOwner(), InstigatorActor);
 		}
+	}
+	
+	return true;
+}
+
+bool USAttributeComponent::ApplyRageChange(AActor* InstigatorActor, float Delta)
+{
+	const float OldRage = Rage;
+	Rage = FMath::Clamp(Rage + Delta, 0.0f, MaxRage);
+
+	if (OldRage == Rage)
+		return false;
+
+	const float ActualDelta = Rage - OldRage;
+	if (ActualDelta != 0.0f)
+	{
+		MulticastRageChanged(InstigatorActor, Rage, ActualDelta);
 	}
 	
 	return true;
@@ -87,5 +110,10 @@ void USAttributeComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>&
 void USAttributeComponent::MulticastHealthChanged_Implementation(AActor* Instigator, float NewHealth, float Delta)
 {
 	OnHealthChanged.Broadcast(Instigator, this, NewHealth, Delta);
+}
+
+void USAttributeComponent::MulticastRageChanged_Implementation(AActor* Instigator, float NewRage, float Delta)
+{
+	OnRageChanged.Broadcast(Instigator, this, NewRage, Delta);
 }
 
